@@ -7,10 +7,12 @@ import SubjectInput from './components/SubjectInput'
 import TemplateEditor from './components/TemplateEditor'
 import AttachmentUpload from './components/AttachmentUpload'
 import SendSection from './components/SendSection'
+import SettingsPage from './components/SettingsPage'
 import { getToken } from './api'
 
 export default function App() {
   const [token, setToken] = useState(getToken)
+  const [page, setPage] = useState('campaign') // 'campaign' | 'settings'
   const [emails, setEmails] = useState([])
   const [subject, setSubject] = useState('Welcome to Digicoders!')
   const [htmlBody, setHtmlBody] = useState('')
@@ -54,12 +56,12 @@ export default function App() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
-      <Header onLogout={() => { localStorage.removeItem('bm_token'); setToken(null) }} />
+      <Header onLogout={() => { localStorage.removeItem('bm_token'); setToken(null) }} page={page} onPageChange={setPage} />
 
       <div style={{ display: 'flex' }}>
-        {/* Sidebar */}
-        <Sidebar
-          onLoad={data => {
+        {page === 'campaign' && (
+          <Sidebar
+            onLoad={data => {
             if (typeof data === 'string') {
               setExternalLoad(data)
             } else {
@@ -82,26 +84,30 @@ export default function App() {
             }
           }}
           onSaveRequest={() => setShowSaveModal(true)}
-        />
+        />)}
 
         {/* Main Content */}
         <main style={{ flex: 1, minWidth: 0, padding: '36px 32px 80px', overflowY: 'auto' }}>
-          <div style={{ maxWidth: 820, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
-            <div style={{ marginBottom: 4 }}>
-              <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-                New Email Campaign
-              </h2>
-              <p style={{ fontSize: '0.84rem', color: 'var(--text-muted)', marginTop: 4 }}>
-                Upload recipients, compose your message, and send in bulk
-              </p>
-            </div>
+          {page === 'settings' ? (
+            <SettingsPage />
+          ) : (
+            <div style={{ maxWidth: 820, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
+              <div style={{ marginBottom: 4 }}>
+                <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                  New Email Campaign
+                </h2>
+                <p style={{ fontSize: '0.84rem', color: 'var(--text-muted)', marginTop: 4 }}>
+                  Upload recipients, compose your message, and send in bulk
+                </p>
+              </div>
 
-            <ExcelUpload onParsed={setEmails} />
-            <SubjectInput value={subject} onChange={setSubject} />
-            <TemplateEditor onChange={setHtmlBody} externalLoad={externalLoad} />
-            <AttachmentUpload attachments={attachments} onChange={setAttachments} />
-            <SendSection emails={emails} subject={subject} htmlBody={htmlBody} attachments={attachments} />
-          </div>
+              <ExcelUpload onParsed={setEmails} />
+              <SubjectInput value={subject} onChange={setSubject} />
+              <TemplateEditor onChange={setHtmlBody} externalLoad={externalLoad} />
+              <AttachmentUpload attachments={attachments} onChange={setAttachments} />
+              <SendSection emails={emails} subject={subject} htmlBody={htmlBody} attachments={attachments} />
+            </div>
+          )}
         </main>
       </div>
 

@@ -9,6 +9,8 @@ export default defineConfig({
       '/send-emails': 'http://localhost:3000',
       '/templates': 'http://localhost:3000',
       '/auth': 'http://localhost:3000',
+      '/smtp-config': 'http://localhost:3000',
+      '/smtp-test': 'http://localhost:3000',
     }
   }
 })

@@ -1,6 +1,6 @@
-import { Mail, Zap, LogOut } from 'lucide-react'
+import { Mail, Zap, LogOut, Settings } from 'lucide-react'
 
-export default function Header({ onLogout }) {
+export default function Header({ onLogout, page, onPageChange }) {
   return (
     <header style={{
       background: 'linear-gradient(135deg, #0d1526 0%, #111827 100%)',
@@ -35,6 +35,17 @@ export default function Header({ onLogout }) {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <button onClick={() => onPageChange(page === 'settings' ? 'campaign' : 'settings')} style={{
+          display: 'flex', alignItems: 'center', gap: 6,
+          background: page === 'settings' ? 'rgba(79,110,247,0.15)' : 'rgba(79,110,247,0.08)',
+          border: `1px solid ${page === 'settings' ? '#4f6ef7' : '#1e2d45'}`,
+          borderRadius: 20, padding: '5px 12px', cursor: 'pointer'
+        }}>
+          <Settings size={12} color="#4f6ef7" />
+          <span style={{ fontSize: '0.75rem', color: '#4f6ef7', fontWeight: 500 }}>
+            {page === 'settings' ? 'Campaign' : 'Settings'}
+          </span>
+        </button>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 6,
           background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)',
