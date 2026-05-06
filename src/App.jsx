@@ -105,7 +105,7 @@ export default function App() {
               <SubjectInput value={subject} onChange={setSubject} />
               <TemplateEditor onChange={setHtmlBody} externalLoad={externalLoad} />
               <AttachmentUpload attachments={attachments} onChange={setAttachments} />
-              <SendSection emails={emails} subject={subject} htmlBody={htmlBody} attachments={attachments} />
+              <SendSection emails={emails} subject={subject} htmlBody={htmlBody} attachments={attachments} onSaveRequest={() => setShowSaveModal(true)} />
             </div>
           )}
         </main>

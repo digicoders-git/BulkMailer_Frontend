@@ -3,7 +3,7 @@ import { Send, CheckCircle, XCircle, AlertTriangle, Loader, Paperclip } from 'lu
 import Card from './Card'
 import { apiFetch } from '../api'
 
-export default function SendSection({ emails, subject, htmlBody, attachments }) {
+export default function SendSection({ emails, subject, htmlBody, attachments, onSaveRequest }) {
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [result, setResult] = useState(null)
@@ -64,19 +64,18 @@ export default function SendSection({ emails, subject, htmlBody, attachments }) 
           ))}
         </div>
 
-        {/* Send Button */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1, minWidth: 220 }}>
+        {/* Buttons */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, flex: 1, minWidth: 220 }}>
+          {/* Send */}
           <button
             onClick={sendEmails}
             disabled={loading || !emails.length}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-              background: loading || !emails.length
-                ? 'var(--bg-elevated)'
-                : 'linear-gradient(135deg, #4f6ef7 0%, #7c3aed 100%)',
+              background: loading || !emails.length ? 'var(--bg-elevated)' : 'linear-gradient(135deg, #4f6ef7 0%, #7c3aed 100%)',
               color: loading || !emails.length ? 'var(--text-muted)' : '#fff',
               border: `1px solid ${loading || !emails.length ? 'var(--border)' : 'transparent'}`,
-              padding: '14px 28px', borderRadius: 'var(--radius-md)',
+              padding: '13px 28px', borderRadius: 'var(--radius-md)',
               fontSize: '0.92rem', fontWeight: 600, cursor: loading || !emails.length ? 'not-allowed' : 'pointer',
               fontFamily: 'inherit', transition: 'all 0.2s',
               boxShadow: loading || !emails.length ? 'none' : '0 4px 20px rgba(79,110,247,0.35)',
@@ -88,6 +87,44 @@ export default function SendSection({ emails, subject, htmlBody, attachments }) 
               ? <><Loader size={16} style={{ animation: 'spin 0.8s linear infinite' }} /> Sending {emails.length} emails...</>
               : <><Send size={16} /> Send to {emails.length || 0} Recipients</>
             }
+          </button>
+
+          {/* Save Only */}
+          <button
+            onClick={() => onSaveRequest?.()}
+            disabled={loading}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+              background: 'var(--bg-surface)', color: 'var(--text-secondary)',
+              border: '1px solid var(--border)',
+              padding: '13px 28px', borderRadius: 'var(--radius-md)',
+              fontSize: '0.92rem', fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer',
+              fontFamily: 'inherit', transition: 'all 0.2s',
+            }}
+            onMouseEnter={e => { if (!loading) e.currentTarget.style.borderColor = '#4f6ef7' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)' }}
+          >
+            Save Only
+          </button>
+
+          {/* Send and Save */}
+          <button
+            onClick={async () => { await sendEmails(); onSaveRequest?.() }}
+            disabled={loading || !emails.length}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+              background: loading || !emails.length ? 'var(--bg-elevated)' : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              color: loading || !emails.length ? 'var(--text-muted)' : '#fff',
+              border: `1px solid ${loading || !emails.length ? 'var(--border)' : 'transparent'}`,
+              padding: '13px 28px', borderRadius: 'var(--radius-md)',
+              fontSize: '0.92rem', fontWeight: 600, cursor: loading || !emails.length ? 'not-allowed' : 'pointer',
+              fontFamily: 'inherit', transition: 'all 0.2s',
+              boxShadow: loading || !emails.length ? 'none' : '0 4px 20px rgba(16,185,129,0.3)',
+            }}
+            onMouseEnter={e => { if (!loading && emails.length) e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            <Send size={16} /> Send and Save
           </button>
 
           {loading && (
