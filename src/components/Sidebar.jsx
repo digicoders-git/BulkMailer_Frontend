@@ -27,6 +27,7 @@ export default function Sidebar({ onLoad, onSaveRequest }) {
       const res = await apiFetch('/templates')
       const data = await res.json()
       setTemplates(data)
+      return data
     } catch { setTemplates({}) }
     finally { setLoading(false) }
   }

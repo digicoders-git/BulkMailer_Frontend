@@ -46,7 +46,7 @@ export default function App() {
 </table>
 </body></html>`
     await saveTemplateToServer(templateName.trim(), innerHtml, fullHtml, attachments)
-    window.__refreshSidebar?.()
+    await window.__refreshSidebar?.()
     setSaving(false)
     setTemplateName('')
     setShowSaveModal(false)
