@@ -12,7 +12,7 @@ const PRESETS = [
 ]
 
 export default function SettingsPage() {
-  const [cfg, setCfg] = useState({ host: '', port: 587, secure: false, user: '', pass: '' })
+  const [cfg, setCfg] = useState({ host: '', port: 587, secure: false, user: '', pass: '', fromName: '' })
   const [showPass, setShowPass] = useState(false)
   const [saving, setSaving] = useState(false)
   const [testing, setTesting] = useState(false)
@@ -21,7 +21,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     apiFetch('/smtp-config').then(r => r.json()).then(data => {
-      setCfg({ host: data.host, port: data.port, secure: data.secure, user: data.user, pass: '' })
+      setCfg({ host: data.host, port: data.port, secure: data.secure, user: data.user, pass: '', fromName: data.fromName || '' })
     }).catch(() => {})
   }, [])
 
@@ -97,6 +97,15 @@ export default function SettingsPage() {
       <Card title="SMTP Settings" icon={Settings}>
         <form onSubmit={handleSave}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+
+            {/* Sender Name */}
+            <div style={{ gridColumn: '1 / -1' }}>
+              <Label>Sender Name</Label>
+              <InputWrap icon={<User size={14} color="#4b6080" />}>
+                <input type="text" value={cfg.fromName} onChange={e => setCfg(p => ({ ...p, fromName: e.target.value }))}
+                  placeholder="Himanshu Kashyap" style={iStyle} />
+              </InputWrap>
+            </div>
 
             {/* Host */}
             <div style={{ gridColumn: '1 / -1' }}>
