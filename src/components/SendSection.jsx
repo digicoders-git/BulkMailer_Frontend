@@ -7,6 +7,8 @@ export default function SendSection({ emails, subject, htmlBody, attachments, on
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [result, setResult] = useState(null)
+  const [batchSize, setBatchSize] = useState(10)
+  const [delayMs, setDelayMs] = useState(3000)
 
   async function sendEmails() {
     if (!emails.length) return alert('Please upload an Excel file first!')
@@ -21,6 +23,8 @@ export default function SendSection({ emails, subject, htmlBody, attachments, on
       formData.append('emails', JSON.stringify(emails))
       formData.append('subject', subject)
       formData.append('htmlBody', htmlBody)
+      formData.append('batchSize', batchSize)
+      formData.append('delayMs', delayMs)
       attachments.forEach(file => formData.append('attachments', file))
 
       const res = await apiFetch('/send-emails', { method: 'POST', body: formData })
@@ -62,6 +66,40 @@ export default function SendSection({ emails, subject, htmlBody, attachments, on
               <span style={{ fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 500, maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v}</span>
             </div>
           ))}
+
+          {/* Batch Settings */}
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 14, marginBottom: 8 }}>Batch Settings</p>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Batch Size</label>
+              <input
+                type="number" min={1} max={50} value={batchSize}
+                onChange={e => setBatchSize(Number(e.target.value))}
+                disabled={loading}
+                style={{
+                  width: '100%', background: 'var(--bg-elevated)', border: '1px solid var(--border)',
+                  borderRadius: 6, padding: '6px 10px', color: 'var(--text-primary)',
+                  fontSize: '0.85rem', fontFamily: 'inherit', boxSizing: 'border-box'
+                }}
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block', marginBottom: 4 }}>Delay (ms)</label>
+              <input
+                type="number" min={500} max={30000} step={500} value={delayMs}
+                onChange={e => setDelayMs(Number(e.target.value))}
+                disabled={loading}
+                style={{
+                  width: '100%', background: 'var(--bg-elevated)', border: '1px solid var(--border)',
+                  borderRadius: 6, padding: '6px 10px', color: 'var(--text-primary)',
+                  fontSize: '0.85rem', fontFamily: 'inherit', boxSizing: 'border-box'
+                }}
+              />
+            </div>
+          </div>
+          <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 6 }}>
+            {batchSize} emails parallel → {delayMs/1000}s wait → next batch
+          </p>
         </div>
 
         {/* Buttons */}

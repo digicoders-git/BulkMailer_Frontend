@@ -72,7 +72,7 @@ export default function TemplateEditor({ onChange, externalLoad }) {
       </td></tr>
       <tr><td style="padding:20px 48px 28px;border-top:1px solid #f3f4f6;">
         <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#9ca3af;">
-          This email was sent by Digicoders &middot; <a href="https://digicoders.in" style="color:#6b7280;text-decoration:none;">digicoders.in</a>
+          This email was Sent by <strong>DigiCoders</strong> &middot; <a href="https://digicoders.in" style="color:#6b7280;text-decoration:none;">digicoders.in</a>
         </p>
       </td></tr>
     </table>
